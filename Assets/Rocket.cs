@@ -11,34 +11,57 @@ public class Rocket : MonoBehaviour {
     Rigidbody rigidBody;
     AudioSource audioSource;
 
-	void Start () {
+	void Start ()
+    {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
 	}
 	
-	void Update () {
+	void Update ()
+    {
         Thrust();
         Rotate();
 	}
 
-    private void Thrust() {
-        if (Input.GetKey(KeyCode.Space)) {
+    private void OnCollisionEnter(Collision collision)
+    {
+        switch (collision.gameObject.tag) {
+            case "Friendly":
+                print("OK");
+                break;
+            default:
+                print("DIE");
+                break;
+        }
+    }
+
+    private void Thrust()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
             float translationThisFrame = mainThrust * Time.deltaTime;
             rigidBody.AddRelativeForce(Vector3.up * translationThisFrame);
-            if (!audioSource.isPlaying) {
+            if (!audioSource.isPlaying)
+            {
                 audioSource.Play();
             }
-        } else {
+        }
+        else
+        {
             audioSource.Stop();
         }
     }
 
-    private void Rotate() {
+    private void Rotate()
+    {
         rigidBody.freezeRotation = true;
         float rotationThisFrame = rcsThrust * Time.deltaTime;
-        if (Input.GetKey(KeyCode.A)) {
+        if (Input.GetKey(KeyCode.A))
+        {
             transform.Rotate(Vector3.forward * rotationThisFrame);
-        } else if (Input.GetKey(KeyCode.D)) {
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
             transform.Rotate(Vector3.back * rotationThisFrame);
         }
         rigidBody.freezeRotation = false;
